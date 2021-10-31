@@ -1,18 +1,20 @@
 import faker from 'faker'
+import { AddBook } from '../../../src/domain/usecases'
 import { Controller, HttpResponse, HttpRequest , Validation } from '../../../src/presentation/protocols'
 import { badRequest } from '../../../src/presentation/helpers'
-import { MissingParamError } from '../../../src/presentation/errors'
-import { ValidationSpy } from '../mocks/mock-validation'
+import { ValidationSpy, AddBookSpy } from '../mocks/'
 class AddBookController implements Controller{
     constructor(
-        private readonly validation : Validation
+        private readonly validation : Validation,
+        private readonly addBook : AddBook
     ){}
     async handle(httpRequest: HttpRequest): Promise<HttpResponse | any>{
         try {
-            const error = this.validation.validate(httpRequest)
+            const error = this.validation.validate(httpRequest.body)
             if(error){
                 return badRequest(error)
             }
+            this.addBook.add(httpRequest.body)
         } catch (error) {
             console.log(error);
         }
@@ -51,12 +53,14 @@ const makeSut = () => {
             editorial : faker.name.jobArea()
         }
     }
+    const addBookSpy = new AddBookSpy()
     const validateSpy = new ValidationSpy()
-    const sut = new AddBookController(validateSpy)
+    const sut = new AddBookController(validateSpy, addBookSpy)
     return {
         sut,
         requestParams,
-        validateSpy
+        validateSpy,
+        addBookSpy
     }
 }
 
@@ -64,13 +68,19 @@ describe('AddBookController', () => {
     test('Should call Validation with correct values', async () => {
         const { sut, requestParams, validateSpy} = makeSut()
         await sut.handle(requestParams)
-        expect(validateSpy.input).toEqual(requestParams)
+        expect(validateSpy.input).toEqual(requestParams.body)
     })
 
     test('Should return 400 if Validation fails', async () => {
         const { sut, requestParams, validateSpy} = makeSut()
         validateSpy.error = new Error()
-        const httpRquest = await sut.handle(requestParams)
-        expect(httpRquest).toEqual(badRequest(validateSpy.error))
+        const httpRequest = await sut.handle(requestParams)
+        expect(httpRequest).toEqual(badRequest(validateSpy.error))
+    })
+
+    test('Should call AddBook with correct values', async () => {
+        const { sut, requestParams, addBookSpy} = makeSut()
+        await sut.handle(requestParams)
+        expect(addBookSpy.params).toEqual(requestParams.body)
     })
 })
