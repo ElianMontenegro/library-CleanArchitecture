@@ -13,7 +13,7 @@ export class AddBookUsecase implements AddBook{
         const exist = this.checkBookByTitleRepository.checkBookBytitle(data.title)
         let isValid = false
         if(!exist){
-            isValid = await this.addBookRepository.add(data)
+            isValid = await this.addBookRepository.add(data);
         }
         return isValid
     }
@@ -36,8 +36,18 @@ const makeSut = () => {
 
 describe('addBook use cases', () => {
     test('Should return false if checkBookByTitle return true',  async () => {
-        const { sut } = makeSut()
+        const { sut, checkBookByTitleRepositorySpy } = makeSut()
+        checkBookByTitleRepositorySpy.result = true
         const isAdd = await sut.add(bookParams().body)
         expect(isAdd).toBe(false)
     })
+
+    test('Should call checkBookByTitleRepositorySpy with correct email', async () => {
+        const { sut, checkBookByTitleRepositorySpy } = makeSut()
+        const addBookParams = bookParams().body
+        await sut.add(addBookParams)
+        expect(checkBookByTitleRepositorySpy.title).toBe(addBookParams.title)
+    })
+    
+    
 })
