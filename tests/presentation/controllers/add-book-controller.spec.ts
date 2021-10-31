@@ -66,4 +66,11 @@ describe('AddBookController', () => {
         await sut.handle(requestParams)
         expect(validateSpy.input).toEqual(requestParams)
     })
+
+    test('Should return 400 if Validation fails', async () => {
+        const { sut, requestParams, validateSpy} = makeSut()
+        validateSpy.error = new Error()
+        const httpRquest = await sut.handle(requestParams)
+        expect(httpRquest).toEqual(badRequest(validateSpy.error))
+    })
 })
