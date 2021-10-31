@@ -1,7 +1,7 @@
 import faker from 'faker'
 import { AddBook } from '../../../src/domain/usecases'
 import { Controller, HttpResponse, HttpRequest , Validation } from '../../../src/presentation/protocols'
-import { badRequest } from '../../../src/presentation/helpers'
+import { badRequest, noContent, serverError } from '../../../src/presentation/helpers'
 import { ValidationSpy, AddBookSpy } from '../mocks/'
 class AddBookController implements Controller{
     constructor(
@@ -14,9 +14,10 @@ class AddBookController implements Controller{
             if(error){
                 return badRequest(error)
             }
-            this.addBook.add(httpRequest.body)
-        } catch (error) {
-            console.log(error);
+            await this.addBook.add(httpRequest.body)
+            return noContent()
+        } catch (error : any) {
+            return serverError(error)
         }
     }
 
@@ -83,4 +84,11 @@ describe('AddBookController', () => {
         await sut.handle(requestParams)
         expect(addBookSpy.params).toEqual(requestParams.body)
     })
+
+    test('Should return 500 if AddBook with throw error', async () => {
+        const { sut, requestParams, addBookSpy} = makeSut()
+        jest.spyOn(addBookSpy, 'add').mockImplementationOnce(() => { throw new Error() })
+        const httpResponse = await sut.handle(requestParams)
+        expect(httpResponse).toEqual(serverError(new Error()))
+    }) 
 })
