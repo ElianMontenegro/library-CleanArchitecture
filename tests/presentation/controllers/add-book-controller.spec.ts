@@ -55,6 +55,13 @@ describe('AddBookController', () => {
         expect(httpResponse).toEqual(serverError(new Error()))
     }) 
 
+    test('Should return 400 if AddBook return false', async () => {
+        const { sut, requestParams, addBookSpy} = makeSut()
+        addBookSpy.result = false
+        const httpResponse = await sut.handle(requestParams)
+        expect(httpResponse).toEqual(badRequest(new Error('the title already used')))
+    })
+
     test('Should return 204 on success', async () => {
         const { sut, requestParams} = makeSut()
         const httpResponse = await sut.handle(requestParams)
