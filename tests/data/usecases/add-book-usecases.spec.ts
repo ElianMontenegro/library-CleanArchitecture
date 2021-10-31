@@ -54,5 +54,12 @@ describe('addBook use cases', () => {
         addBookRepositorySpy.result = false
         const isValid = await sut.add(bookParams().body)
         expect(isValid).toBe(false)
-      })
+    })
+
+    test('Should throw error if addBookRepositorySpy throw error', async () => {
+        const { sut, addBookRepositorySpy } = makeSut()
+        jest.spyOn(addBookRepositorySpy, 'add').mockImplementationOnce(() => { throw new Error() })
+        const promise = sut.add(bookParams().body)
+        await expect(promise).rejects.toThrowError()
+    })
 })
