@@ -14,7 +14,10 @@ export class AddBookController implements Controller{
             if(error){
                 return badRequest(error)
             }
-            await this.addBook.add(httpRequest.body)
+            const isSave = await this.addBook.add(httpRequest.body)
+            if(!isSave){
+                return badRequest(new Error('the title already used'))
+            }
             return noContent()
         } catch (error : any) {
             return serverError(error)
