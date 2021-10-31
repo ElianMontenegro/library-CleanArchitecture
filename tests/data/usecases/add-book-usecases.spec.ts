@@ -42,6 +42,13 @@ describe('addBook use cases', () => {
         expect(isAdd).toBe(false)
     })
 
+    test('Should return true if checkBookByTitle return false',  async () => {
+        const { sut, checkBookByTitleRepositorySpy } = makeSut()
+        checkBookByTitleRepositorySpy.result = false
+        const isAdd = await sut.add(bookParams().body)
+        expect(isAdd).toBe(true)
+    })
+
     test('Should call checkBookByTitleRepositorySpy with correct email', async () => {
         const { sut, checkBookByTitleRepositorySpy } = makeSut()
         const addBookParams = bookParams().body
