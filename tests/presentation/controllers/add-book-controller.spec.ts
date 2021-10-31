@@ -91,4 +91,10 @@ describe('AddBookController', () => {
         const httpResponse = await sut.handle(requestParams)
         expect(httpResponse).toEqual(serverError(new Error()))
     }) 
+
+    test('Should return 204 on success', async () => {
+        const { sut, requestParams} = makeSut()
+        const httpResponse = await sut.handle(requestParams)
+        expect(httpResponse).toEqual(noContent())
+    }) 
 })
