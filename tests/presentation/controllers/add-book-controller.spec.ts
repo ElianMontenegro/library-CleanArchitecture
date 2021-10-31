@@ -1,44 +1,7 @@
-import faker from 'faker'
-import { AddBook } from '../../../src/domain/usecases'
-import { Controller, HttpResponse, HttpRequest , Validation } from '../../../src/presentation/protocols'
 import { badRequest, noContent, serverError } from '../../../src/presentation/helpers'
 import { ValidationSpy, AddBookSpy } from '../mocks/'
-class AddBookController implements Controller{
-    constructor(
-        private readonly validation : Validation,
-        private readonly addBook : AddBook
-    ){}
-    async handle(httpRequest: HttpRequest): Promise<HttpResponse | any>{
-        try {
-            const error = this.validation.validate(httpRequest.body)
-            if(error){
-                return badRequest(error)
-            }
-            await this.addBook.add(httpRequest.body)
-            return noContent()
-        } catch (error : any) {
-            return serverError(error)
-        }
-    }
-
-}
-
-export namespace AddBookController {
-    export type httpRequest = {
-        body : {
-            title : string
-            autor : string
-            category : string
-            lenguage : string[]
-            country : string
-            isbn : string
-            year : number
-            numberPage : number
-            editorial : string
-        }
-    }
-}
-
+import { AddBookController } from '../../../src/presentation/controllers' 
+import faker from 'faker'
 
 const makeSut = () => {
     const requestParams = {
