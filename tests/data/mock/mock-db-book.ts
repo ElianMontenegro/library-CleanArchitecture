@@ -2,7 +2,7 @@ import { CheckBookByTitleRepository, AddBookRepository } from '../../../src/data
 
 export class CheckBookByTitleRepositorySpy implements CheckBookByTitleRepository{
     title : string
-    result = true
+    result = false
     async checkBookBytitle(title: string): Promise<Boolean>{
         this.title = title
         return this.result
@@ -12,7 +12,7 @@ export class CheckBookByTitleRepositorySpy implements CheckBookByTitleRepository
 export class AddBookRepositorySpy implements AddBookRepository{
     book : any
     result = true
-    async add(book: any): Promise<boolean>{
+    async add(book: any): Promise<AddBookRepository.Result>{
         this.book = book
         return this.result
     }
