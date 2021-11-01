@@ -30,6 +30,13 @@ describe('bookMongoRepository', () => {
             expect(exist).toBe(false)
         })
 
+        test('Should return true', async () =>{
+            const sut =  makeSut()
+            const book = bookParams().body
+            await bookCollection.insertOne(book)
+            const exist = await sut.checkBookBytitle(book.title)
+            expect(exist).toBe(true)
+        })
         
     })
 })
