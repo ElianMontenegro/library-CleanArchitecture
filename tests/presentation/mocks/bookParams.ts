@@ -6,9 +6,9 @@ export const bookParams = () => {
         body : {
             title : faker.name.title(),
             autor : faker.name.firstName(),
-            category : faker.name.jobArea(),
-            lenguage : [ faker.random.word() ],
-            country : faker.address.county(),
+            categoryId : faker.name.jobArea(),
+            language : [ faker.random.word() ],
+            countryId : faker.address.county(),
             isbn : faker.datatype.uuid(),
             year : faker.datatype.number(4),
             numberPage : faker.datatype.number(3),

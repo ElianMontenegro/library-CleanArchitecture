@@ -1,28 +1,15 @@
 import { badRequest, noContent, serverError } from '../../../src/presentation/helpers'
 import { ValidationSpy, AddBookSpy } from '../mocks/'
 import { AddBookController } from '../../../src/presentation/controllers' 
+import { bookParams } from '../mocks/bookParams'
 import faker from 'faker'
 
 const makeSut = () => {
-    const requestParams = {
-        body : {
-            title : faker.name.title(),
-            autor : faker.name.firstName(),
-            category : faker.name.jobArea(),
-            lenguage : [ faker.random.word() ],
-            country : faker.address.county(),
-            isbn : faker.datatype.uuid(),
-            year : faker.datatype.number(4),
-            numberPage : faker.datatype.number(3),
-            editorial : faker.name.jobArea()
-        }
-    }
     const addBookSpy = new AddBookSpy()
     const validateSpy = new ValidationSpy()
     const sut = new AddBookController(validateSpy, addBookSpy)
     return {
         sut,
-        requestParams,
         validateSpy,
         addBookSpy
     }
@@ -30,41 +17,43 @@ const makeSut = () => {
 
 describe('AddBookController', () => {
     test('Should call Validation with correct values', async () => {
-        const { sut, requestParams, validateSpy} = makeSut()
-        await sut.handle(requestParams)
-        expect(validateSpy.input).toEqual(requestParams.body)
+        const { sut, validateSpy} = makeSut()
+        const params  = bookParams()
+        await sut.handle(params)
+        expect(validateSpy.input).toEqual(params.body)
     })
 
     test('Should return 400 if Validation fails', async () => {
-        const { sut, requestParams, validateSpy} = makeSut()
+        const { sut, validateSpy} = makeSut()
         validateSpy.error = new Error()
-        const httpRequest = await sut.handle(requestParams)
+        const httpRequest = await sut.handle(bookParams())
         expect(httpRequest).toEqual(badRequest(validateSpy.error))
     })
 
     test('Should call AddBook with correct values', async () => {
-        const { sut, requestParams, addBookSpy} = makeSut()
-        await sut.handle(requestParams)
-        expect(addBookSpy.params).toEqual(requestParams.body)
+        const { sut, addBookSpy} = makeSut()
+        const params  = bookParams()
+        await sut.handle(params)
+        expect(addBookSpy.params).toEqual(params.body)
     })
 
     test('Should return 500 if AddBook with throw error', async () => {
-        const { sut, requestParams, addBookSpy} = makeSut()
+        const { sut, addBookSpy} = makeSut()
         jest.spyOn(addBookSpy, 'add').mockImplementationOnce(() => { throw new Error() })
-        const httpResponse = await sut.handle(requestParams)
+        const httpResponse = await sut.handle(bookParams())
         expect(httpResponse).toEqual(serverError(new Error()))
     }) 
 
     test('Should return 400 if AddBook return false', async () => {
-        const { sut, requestParams, addBookSpy} = makeSut()
+        const { sut, addBookSpy} = makeSut()
         addBookSpy.result = false
-        const httpResponse = await sut.handle(requestParams)
+        const httpResponse = await sut.handle(bookParams())
         expect(httpResponse).toEqual(badRequest(new Error('the title already used')))
     })
 
     test('Should return 204 on success', async () => {
-        const { sut, requestParams} = makeSut()
-        const httpResponse = await sut.handle(requestParams)
+        const { sut } = makeSut()
+        const httpResponse = await sut.handle(bookParams())
         expect(httpResponse).toEqual(noContent())
     }) 
 })
