@@ -31,9 +31,9 @@ export namespace AddBookController {
         body : {
             title : string
             autor : string
-            category : string
-            lenguage : string[]
-            country : string
+            categoryId : string
+            language : string[]
+            countryId : string
             isbn : string
             year : number
             numberPage : number
