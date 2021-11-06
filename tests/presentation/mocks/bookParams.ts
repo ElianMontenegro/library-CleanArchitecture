@@ -6,12 +6,12 @@ export const bookParams = () => {
         body : {
             title : faker.name.title(),
             autor : faker.name.firstName(),
-            categoryId : faker.name.jobArea(),
-            language : [ faker.random.word() ],
-            countryId : faker.address.county(),
+            categoryId : faker.datatype.uuid(),
+            language : [ faker.datatype.uuid() ],
+            countryId : faker.datatype.uuid(),
             isbn : faker.datatype.uuid(),
-            year : faker.datatype.number(4),
-            numberPage : faker.datatype.number(3),
+            year : faker.datatype.number() ,
+            numberPage : faker.datatype.number(),
             editorial : faker.name.jobArea()
         }
     }
