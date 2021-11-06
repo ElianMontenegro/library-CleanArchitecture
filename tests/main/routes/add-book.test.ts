@@ -35,14 +35,7 @@ describe('Book Route', () => {
                 .expect(400)
         })
 
-        test('Should retrun 400 if title is used', async () => {
-            const params = bookParams().body
-            bookCollection.insertOne(params)
-            await request(app)
-                .post('/api/add-book')
-                .send(params)
-                .expect(400)
-        })
+       
 
     })
 })
