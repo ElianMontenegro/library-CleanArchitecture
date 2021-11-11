@@ -1,4 +1,5 @@
 import faker from "faker"
+import { SignupUserController } from "../controllers/auth/signup-user-controller.spec"
 
 
 export const bookParams = () => {
@@ -16,3 +17,12 @@ export const bookParams = () => {
         }
     }
 }
+
+export const SingupUserParams = (): SignupUserController.Request  => (
+    {
+        username : faker.name.firstName(),
+        email : faker.internet.email(),
+        password : 'password_Any',
+        repeatPassword : 'password_Any'
+    }
+)
