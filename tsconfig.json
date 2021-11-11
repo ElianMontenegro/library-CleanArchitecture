@@ -5,15 +5,16 @@
    
     /* Modules */
     "module": "commonjs",                                /* Specify what module code is generated. */
-    "rootDir": "./src",                                 /* Specify the root folder within your source files. */
+    "rootDirs": ["src", "tests"],                                /* Specify the root folder within your source files. */
     "moduleResolution": "node",                       /* Specify how TypeScript looks up a file from a given module specifier. */                                /* Specify a file that bundles all outputs into one JavaScript file. If `declaration` is true, also designates a file that bundles all .d.ts output. */
     "outDir": "./dist",                                   /* Specify an output folder for all emitted files. */           
     "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */
-    // "preserveSymlinks": true,                         /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */
+    "sourceMap": true,                      /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */
     "forceConsistentCasingInFileNames": true,   
-    "baseUrl": ".",    
+    "baseUrl": "src",
     "paths": {
-      "@/*": ["src/*"]
+      "@/tests/*": ["../tests/*"],
+      "@/*": ["*"]
     },
     /* Type Checking */
     "strict": true,                                      /* Enable all strict type-checking options. */
@@ -39,6 +40,6 @@
     "skipLibCheck": true,
     "strictPropertyInitialization": false                            /* Skip type checking all .d.ts files. */
   }, 
-  "include" : [ "./src/**/*" ], 
+  "include": ["src", "tests"], 
   "exclude": [ "node_modules"]
 }
