@@ -11,10 +11,10 @@
     "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */
     "sourceMap": true,                      /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */
     "forceConsistentCasingInFileNames": true,   
-    "baseUrl": "src",
+    "baseUrl": ".",
     "paths": {
-      "@/tests/*": ["../tests/*"],
-      "@/*": ["*"]
+      "@/tests/*": ["tests/*"],
+      "@/*": ["src/*"]
     },
     /* Type Checking */
     "strict": true,                                      /* Enable all strict type-checking options. */
