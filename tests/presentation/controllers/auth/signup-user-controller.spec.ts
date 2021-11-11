@@ -42,7 +42,7 @@ const makeSut = () => {
 
 
 describe('SignupUserController', () => {
-    test('Should return 400 validation return error', async () => {
+    test('Should return 400 if validation return error', async () => {
         const { sut, validateSpy } = makeSut()
         validateSpy.error = new MissingParamError(faker.random.word())
         const httpRequest = await sut.handle(SingupUserParams())
