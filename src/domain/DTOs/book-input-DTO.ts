@@ -1,5 +1,5 @@
 
-export interface book {
+export interface bookInputDTO {
     title : string
     autor : string
     categoryId : string

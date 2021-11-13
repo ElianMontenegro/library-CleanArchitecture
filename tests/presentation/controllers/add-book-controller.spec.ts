@@ -2,7 +2,7 @@ import { badRequest, noContent, serverError } from '../../../src/presentation/he
 import { ValidationSpy, AddBookSpy } from '../mocks/'
 import { AddBookController } from '../../../src/presentation/controllers' 
 import { bookParams } from '../mocks/modelsParamsFake'
-import faker from 'faker'
+
 
 const makeSut = () => {
     const addBookSpy = new AddBookSpy()

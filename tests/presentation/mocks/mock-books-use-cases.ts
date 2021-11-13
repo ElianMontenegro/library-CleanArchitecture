@@ -1,10 +1,10 @@
 import { AddBook } from '../../../src/domain/usecases'
-
+import { bookInputDTO } from '../../../src/domain/DTOs'
 
 export class AddBookSpy implements AddBook{
-    params : AddBook.Params 
+    params : bookInputDTO
     result = true
-    async add(data: AddBook.Params): Promise<Boolean>{
+    async add(data: bookInputDTO): Promise<Boolean>{
         this.params = data
         return this.result
     }

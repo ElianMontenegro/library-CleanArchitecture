@@ -1,6 +1,6 @@
 import { mongoHelper } from './mongo-helper'
 import { CheckBookByTitleRepository, AddBookRepository } from "@/data/protocols/db";
-import { book } from "@/domain/DTOs";
+import { bookInputDTO } from "@/domain/DTOs";
 import { Collection } from 'mongodb';
 
 
@@ -14,7 +14,7 @@ export class BookMongoRepository implements
         return  this.accountCollection
     }
 
-    async add(book: book): Promise<boolean>{
+    async add(book: bookInputDTO): Promise<boolean>{
         const addBook = await this.makeCollection().insertOne(book)
         return addBook.insertedId !== null
     }
