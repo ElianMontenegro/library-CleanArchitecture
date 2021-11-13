@@ -76,4 +76,11 @@ describe('SignupUserController', () => {
             password: signupUserParams.password
         })
     })
+
+    test('Should return 500 if AddAccount throws error', async () => {
+        const { sut, addAccountSpy } = makeSut()
+        jest.spyOn(addAccountSpy, 'add').mockImplementationOnce(() => { throw new Error()})
+        const httpResponse = await sut.handle(SingupUserParams())
+        expect(httpResponse).toEqual(serverError(new Error()))
+    })
 });
