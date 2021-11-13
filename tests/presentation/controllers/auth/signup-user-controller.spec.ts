@@ -1,18 +1,26 @@
-import { badRequest, serverError } from '../../../../src/presentation/helpers'
+import { badRequest, serverError, forbidden } from '../../../../src/presentation/helpers'
 import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
-import { ValidationSpy } from '../../../../tests/presentation/mocks'
-import { SingupUserParams } from '../../../../tests/presentation/mocks'
-import { MissingParamError } from '../../../../src/presentation/errors'
+import { ValidationSpy, AddAccountSpy, SingupUserParams } from '../../../../tests/presentation/mocks'
+import { MissingParamError, DataInUseError } from '../../../../src/presentation/errors'
+import { AddAccount } from '@/domain/usecases'
 import faker from 'faker'
 
+
 export class SignupUserController implements Controller{
-    constructor (private readonly validation : Validation){}
+    constructor (
+        private readonly validation : Validation,
+        private readonly addAccount : AddAccount
+    ){}
     async handle(httpRequest: SignupUserController.Request): Promise<HttpResponse>{
         try {
-            const { username, email, password, repeatPassword } = httpRequest
+    
             const error = this.validation.validate(httpRequest)
             if(error){
                 return badRequest(error)
+            }
+            const isValid = await this.addAccount.add(httpRequest)
+            if(!isValid){
+                return forbidden(new DataInUseError('email'))
             }
 
         } catch (error : any) {
@@ -32,10 +40,12 @@ export namespace SignupUserController {
 }
 
 const makeSut = () => {
+    const addAccountSpy = new AddAccountSpy()
     const validateSpy = new ValidationSpy()
-    const sut = new SignupUserController(validateSpy)
+    const sut = new SignupUserController(validateSpy, addAccountSpy)
     return {
         validateSpy,
+        addAccountSpy,
         sut
     }
 }
@@ -47,5 +57,12 @@ describe('SignupUserController', () => {
         validateSpy.error = new MissingParamError(faker.random.word())
         const httpRequest = await sut.handle(SingupUserParams())
         expect(httpRequest).toEqual(badRequest(validateSpy.error))
+    })
+
+    test('Should return 403 if addAccount return false', async () => {
+        const { sut, addAccountSpy } = makeSut()
+        addAccountSpy.result = false
+        const httpRequest = await sut.handle(SingupUserParams())
+        expect(httpRequest).toEqual(forbidden(new DataInUseError('email')))
     })
 });
