@@ -1,7 +1,7 @@
 import { badRequest, serverError, forbidden } from '../../../../src/presentation/helpers'
 import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
 import { ValidationSpy, AddAccountSpy, SingupUserParams } from '../../../../tests/presentation/mocks'
-import { MissingParamError, DataInUseError } from '../../../../src/presentation/errors'
+import { MissingParamError, DataInUseError, InvalidParamError } from '../../../../src/presentation/errors'
 import { AddAccount } from '@/domain/usecases'
 import faker from 'faker'
 
@@ -17,6 +17,9 @@ export class SignupUserController implements Controller{
             const error = this.validation.validate(httpRequest)
             if(error){
                 return badRequest(error)
+            }
+            if(password !== repeatPassword){
+                return badRequest(new InvalidParamError('repeatPassword'))
             }
             const isValid = await this.addAccount.add({username, email, password})
             if(!isValid){
@@ -82,5 +85,13 @@ describe('SignupUserController', () => {
         jest.spyOn(addAccountSpy, 'add').mockImplementationOnce(() => { throw new Error()})
         const httpResponse = await sut.handle(SingupUserParams())
         expect(httpResponse).toEqual(serverError(new Error()))
+    })
+
+    test('Should return 400 passwords not match', async () => {
+        const { sut } = makeSut()
+        const paramsUser =  SingupUserParams()
+        paramsUser.repeatPassword = 'different_password'
+        const httpResponse = await sut.handle(paramsUser)
+        expect(httpResponse).toEqual(badRequest(new InvalidParamError('repeatPassword')))
     })
 });
