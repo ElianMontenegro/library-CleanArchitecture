@@ -1,15 +1,17 @@
-import { badRequest, serverError, forbidden } from '../../../../src/presentation/helpers'
+import { badRequest, serverError, forbidden, Unauthorized } from '../../../../src/presentation/helpers'
 import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
-import { ValidationSpy, AddAccountSpy, SingupUserParams } from '../../../../tests/presentation/mocks'
+import { ValidationSpy, AddAccountSpy, SingupUserParams, AuthenticateSpy } from '../../../../tests/presentation/mocks'
 import { MissingParamError, DataInUseError, InvalidParamError } from '../../../../src/presentation/errors'
-import { AddAccount } from '@/domain/usecases'
+import { AddAccount, Authenticate } from '@/domain/usecases'
 import faker from 'faker'
+import { UnauthorizedError } from '../../../../src/presentation/errors'
 
 
 export class SignupUserController implements Controller{
     constructor (
         private readonly validation : Validation,
-        private readonly addAccount : AddAccount
+        private readonly addAccount : AddAccount,
+        private readonly authenticate : Authenticate
     ){}
     async handle(httpRequest: SignupUserController.Request): Promise<HttpResponse>{
         try {
@@ -24,6 +26,10 @@ export class SignupUserController implements Controller{
             const isValid = await this.addAccount.add({username, email, password})
             if(!isValid){
                 return forbidden(new DataInUseError('email'))
+            }
+            const isAuthenticated = await this.authenticate.auth({email, password})
+            if(!isAuthenticated){
+                return Unauthorized(new UnauthorizedError())
             }
 
         } catch (error : any) {
@@ -43,12 +49,18 @@ export namespace SignupUserController {
 }
 
 const makeSut = () => {
+    const authenticateSpy = new AuthenticateSpy()
     const addAccountSpy = new AddAccountSpy()
     const validateSpy = new ValidationSpy()
-    const sut = new SignupUserController(validateSpy, addAccountSpy)
+    const sut = new SignupUserController(
+        validateSpy, 
+        addAccountSpy, 
+        authenticateSpy
+    )
     return {
         validateSpy,
         addAccountSpy,
+        authenticateSpy,
         sut
     }
 }
@@ -93,5 +105,12 @@ describe('SignupUserController', () => {
         paramsUser.repeatPassword = 'different_password'
         const httpResponse = await sut.handle(paramsUser)
         expect(httpResponse).toEqual(badRequest(new InvalidParamError('repeatPassword')))
+    })
+
+    test('Should return 401 if authenticate return null', async () => {
+        const { sut, authenticateSpy } = makeSut()
+        authenticateSpy.result = null
+        const httpResponse = await sut.handle(SingupUserParams())
+        expect(httpResponse).toEqual(Unauthorized(new UnauthorizedError()))
     })
 });
