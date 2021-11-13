@@ -1,4 +1,4 @@
-import { badRequest, serverError, forbidden, Unauthorized } from '../../../../src/presentation/helpers'
+import { badRequest, serverError, forbidden, Unauthorized, ok } from '../../../../src/presentation/helpers'
 import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
 import { ValidationSpy, AddAccountSpy, SingupUserParams, AuthenticateSpy } from '../../../../tests/presentation/mocks'
 import { MissingParamError, DataInUseError, InvalidParamError } from '../../../../src/presentation/errors'
@@ -27,11 +27,11 @@ export class SignupUserController implements Controller{
             if(!isValid){
                 return forbidden(new DataInUseError('email'))
             }
-            const isAuthenticated = await this.authenticate.auth({email, password})
-            if(!isAuthenticated){
+            const Authenticated = await this.authenticate.auth({email, password})
+            if(!Authenticated){
                 return Unauthorized(new UnauthorizedError())
             }
-
+            return ok(Authenticated)
         } catch (error : any) {
             return serverError(error)
         }
@@ -122,5 +122,11 @@ describe('SignupUserController', () => {
           email: paramsUser.email,
           password: paramsUser.password
         })
+    })
+
+    test('Should return 200 if valid data is provided', async () => {
+        const { sut, authenticateSpy } = makeSut()
+        const httpResponse = await sut.handle(SingupUserParams())
+        expect(httpResponse).toEqual(ok(authenticateSpy.result))
     })
 });

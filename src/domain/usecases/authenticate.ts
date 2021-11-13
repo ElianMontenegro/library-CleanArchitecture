@@ -9,7 +9,7 @@ export namespace Autheticate{
     }
 
     export type Result = {
-        AccessToken : string,
-        RefreshToken : string
+        accessToken : string,
+        refreshToken : string
     }
 }
