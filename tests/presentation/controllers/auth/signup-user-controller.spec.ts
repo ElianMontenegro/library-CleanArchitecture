@@ -1,52 +1,9 @@
 import { badRequest, serverError, forbidden, Unauthorized, ok } from '../../../../src/presentation/helpers'
-import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
 import { ValidationSpy, AddAccountSpy, SingupUserParams, AuthenticateSpy } from '../../../../tests/presentation/mocks'
 import { MissingParamError, DataInUseError, InvalidParamError } from '../../../../src/presentation/errors'
-import { AddAccount, Authenticate } from '@/domain/usecases'
-import faker from 'faker'
 import { UnauthorizedError } from '../../../../src/presentation/errors'
-
-
-export class SignupUserController implements Controller{
-    constructor (
-        private readonly validation : Validation,
-        private readonly addAccount : AddAccount,
-        private readonly authenticate : Authenticate
-    ){}
-    async handle(httpRequest: SignupUserController.Request): Promise<HttpResponse>{
-        try {
-            const { username, email, password,  repeatPassword } = httpRequest
-            const error = this.validation.validate(httpRequest)
-            if(error){
-                return badRequest(error)
-            }
-            if(password !== repeatPassword){
-                return badRequest(new InvalidParamError('repeatPassword'))
-            }
-            const isValid = await this.addAccount.add({username, email, password})
-            if(!isValid){
-                return forbidden(new DataInUseError('email'))
-            }
-            const Authenticated = await this.authenticate.auth({email, password})
-            if(!Authenticated){
-                return Unauthorized(new UnauthorizedError())
-            }
-            return ok(Authenticated)
-        } catch (error : any) {
-            return serverError(error)
-        }
-    }
-    
-}
-
-export namespace SignupUserController {
-    export type Request = {
-        username : string,
-        email: string,
-        password : string,
-        repeatPassword : string
-    }
-}
+import { SignupUserController } from '../../../../src/presentation/controllers'
+import faker from 'faker'
 
 const makeSut = () => {
     const authenticateSpy = new AuthenticateSpy()
@@ -64,7 +21,6 @@ const makeSut = () => {
         sut
     }
 }
-
 
 describe('SignupUserController', () => {
     test('Should return 400 if validation return error', async () => {

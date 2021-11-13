@@ -1,6 +1,5 @@
 import faker from "faker"
-import { SignupUserController } from "../controllers/auth/signup-user-controller.spec"
-
+import { SignupUserController } from "../../../src/presentation/controllers"
 
 export const bookParams = () => {
     return {
