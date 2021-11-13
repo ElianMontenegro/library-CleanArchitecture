@@ -1,7 +1,7 @@
-import { book } from "@/domain/DTOs";
+import { bookInputDTO } from "@/domain/DTOs";
 
 export interface AddBookRepository{
-    add: (book : book) => Promise<AddBookRepository.Result>
+    add: (book : bookInputDTO) => Promise<AddBookRepository.Result>
 }
 
 export namespace AddBookRepository{
