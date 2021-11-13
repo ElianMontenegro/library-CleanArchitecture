@@ -113,4 +113,14 @@ describe('SignupUserController', () => {
         const httpResponse = await sut.handle(SingupUserParams())
         expect(httpResponse).toEqual(Unauthorized(new UnauthorizedError()))
     })
+
+    test('Should call Authentication with correct values', async () => {
+        const { sut, authenticateSpy} = makeSut()
+        const paramsUser =  SingupUserParams()
+        await sut.handle(paramsUser)
+        expect(authenticateSpy.params).toEqual({
+          email: paramsUser.email,
+          password: paramsUser.password
+        })
+    })
 });
