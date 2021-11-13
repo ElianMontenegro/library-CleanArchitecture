@@ -4,10 +4,10 @@ import { AddAccount } from "@/domain/usecases";
 
 
 export class AddAccountSpy implements AddAccount{
-    user : accountInputDTO
+    params : accountInputDTO
     result = true
-    async add(user: accountInputDTO): Promise<Boolean>{
-        this.user = user 
+    async add(params: accountInputDTO): Promise<Boolean>{
+        this.params = params 
         return this.result
     }
 }

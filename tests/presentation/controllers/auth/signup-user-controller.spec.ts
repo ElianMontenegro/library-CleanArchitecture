@@ -13,12 +13,12 @@ export class SignupUserController implements Controller{
     ){}
     async handle(httpRequest: SignupUserController.Request): Promise<HttpResponse>{
         try {
-    
+            const { username, email, password,  repeatPassword } = httpRequest
             const error = this.validation.validate(httpRequest)
             if(error){
                 return badRequest(error)
             }
-            const isValid = await this.addAccount.add(httpRequest)
+            const isValid = await this.addAccount.add({username, email, password})
             if(!isValid){
                 return forbidden(new DataInUseError('email'))
             }
@@ -64,5 +64,16 @@ describe('SignupUserController', () => {
         addAccountSpy.result = false
         const httpRequest = await sut.handle(SingupUserParams())
         expect(httpRequest).toEqual(forbidden(new DataInUseError('email')))
+    })
+
+    test('Should call AddAccount with correct params', async () => {
+        const { sut, addAccountSpy } = makeSut()
+        const signupUserParams = SingupUserParams()
+        await sut.handle(signupUserParams)
+        expect(addAccountSpy.params).toEqual({
+            username: signupUserParams.username,
+            email: signupUserParams.email,
+            password: signupUserParams.password
+        })
     })
 });
