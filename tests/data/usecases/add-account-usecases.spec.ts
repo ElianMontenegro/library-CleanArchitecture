@@ -1,6 +1,6 @@
 import { AddAccountUseCase } from "../../../src/data/usecases/account"
 import faker from "faker"
-import { CheckAccountByEmailRepositorySpy } from "../mock/mock-db-account"
+import { CheckAccountByEmailRepositorySpy, AddAccountRepositorySpy } from "../mock/mock-db-account"
 import { HasherSpy } from "../mock/mock-criptography"
 
 const makeSut = () => {
@@ -9,26 +9,29 @@ const makeSut = () => {
         email : faker.internet.email(),
         password : faker.internet.password()
     }
+    const addAccountRepositorySpy = new AddAccountRepositorySpy()
     const hasherSpy = new HasherSpy
     const checkAccountByEmailRepositorySpy = new CheckAccountByEmailRepositorySpy()
     const sut = new AddAccountUseCase(
         checkAccountByEmailRepositorySpy,
-        hasherSpy
+        hasherSpy,
+        addAccountRepositorySpy
     )
     return {
         userFake,
         checkAccountByEmailRepositorySpy,
         hasherSpy,
+        addAccountRepositorySpy,
         sut
     }
 }
 
 describe('AddAccount usecases', () => {
-    test('Should return null if user is not found', async () => {
+    test('Should return false if user is not found', async () => {
         const { sut, userFake, checkAccountByEmailRepositorySpy } = makeSut()
         checkAccountByEmailRepositorySpy.result = false
         const response = await sut.add(userFake)
-        expect(response).toEqual(null)
+        expect(response).toEqual(false)
     })
 
     test('Should call hasherSpy with correct plaintext', async () => {
@@ -42,5 +45,12 @@ describe('AddAccount usecases', () => {
         jest.spyOn(hasherSpy, 'hash').mockImplementationOnce(() => { throw new Error() })
         const promise = sut.add(userFake)
         await expect(promise).rejects.toThrowError()
+    })
+
+    test('Should call addAccountRepositorySpy with correct params', async () => {
+        const { sut, userFake, addAccountRepositorySpy, hasherSpy } = makeSut()
+        userFake.password = hasherSpy.hashtext
+        await sut.add(userFake)
+        expect(addAccountRepositorySpy.user).toEqual(userFake)
     })
 })
