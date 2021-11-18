@@ -37,4 +37,10 @@ describe('AddAccount usecases', () => {
         expect(hasherSpy.plaintext).toEqual(userFake.password)
     })
 
+    test('Should throw error if hasherSpy throw error', async () => {
+        const { sut, userFake, hasherSpy } = makeSut()
+        jest.spyOn(hasherSpy, 'hash').mockImplementationOnce(() => { throw new Error() })
+        const promise = sut.add(userFake)
+        await expect(promise).rejects.toThrowError()
+    })
 })
