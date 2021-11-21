@@ -31,4 +31,14 @@ describe('accountMongoRepository', () => {
         })
     })
 
+    describe('checkAccountByEmail', () => {
+        test('Should return true if account found', async () => {
+            const sut = makeSut()
+            const accountParams = AccountParams()
+            await accountCollection.insertOne(accountParams)
+            const isSaved = await sut.checkAccountByEmail(accountParams.email)
+            expect(isSaved).toBe(true)
+        })
+    })
+
 })
