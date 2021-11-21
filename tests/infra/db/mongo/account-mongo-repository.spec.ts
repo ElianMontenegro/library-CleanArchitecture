@@ -39,6 +39,11 @@ describe('accountMongoRepository', () => {
             const isSaved = await sut.checkAccountByEmail(accountParams.email)
             expect(isSaved).toBe(true)
         })
-    })
 
+        test('Should return false if account is not found', async () => {
+            const sut = makeSut()
+            const isSaved = await sut.checkAccountByEmail(AccountParams().email)
+            expect(isSaved).toBe(false)
+        })
+    })
 })
