@@ -1,5 +1,5 @@
 import { CheckAccountByEmailRepository, AddAccountRepository } from '@/data/protocols/db/account'
-import { mongoHelper } from '@/infra/db/mongo'
+import { mongoHelper } from '../../../../src/infra/db/mongo'
 import { Collection } from 'mongodb'
 
 export class AccountMongoRepository implements 
@@ -8,7 +8,7 @@ export class AccountMongoRepository implements
 
     accountCollection : Collection
     makeCollection = () =>{
-        this.accountCollection = mongoHelper.getCollection('account')
+        this.accountCollection = mongoHelper.getCollection('user')
         return  this.accountCollection
     }
 

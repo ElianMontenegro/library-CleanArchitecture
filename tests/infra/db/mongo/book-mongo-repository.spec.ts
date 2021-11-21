@@ -16,7 +16,7 @@ describe('bookMongoRepository', () => {
 
     beforeEach(async () => {
         bookCollection = mongoHelper.getCollection('book')
-        bookCollection.deleteMany({})
+        await bookCollection.deleteMany({})
     })
 
     afterAll(async () => {

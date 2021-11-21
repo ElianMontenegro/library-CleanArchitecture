@@ -25,3 +25,12 @@ export const SingupUserParams = (): SignupUserController.Request  => (
         repeatPassword : 'password_Any'
     }
 )
+
+export const AccountParams = () => (
+    {
+        username : faker.name.firstName(),
+        email : faker.internet.email(),
+        password : faker.datatype.uuid(),
+        role : 'user'
+    }
+)
