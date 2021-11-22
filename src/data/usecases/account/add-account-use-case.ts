@@ -1,7 +1,7 @@
 import { CheckAccountByEmailRepository, AddAccountRepository } from "@/data/protocols/db/account";
 import { Hasher } from "@/data/protocols/criptography";
 import { accountInputDTO } from "@/domain/DTOs";
-import { AddAccount } from "@/domain/usecases";
+import { AddAccount } from "@/domain/usecases/account";
 
 export class AddAccountUseCase implements AddAccount{
     constructor (

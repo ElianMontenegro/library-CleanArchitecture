@@ -2,7 +2,7 @@ import { Collection } from 'mongodb';
 import request from 'supertest'
 import { mongoHelper } from "../../../src/infra/db/mongo";
 import app from '../../../src/main/config/app'
-import { bookParams} from '../../presentation/mocks'
+import { bookParams } from '../../presentation/mocks'
 
 let bookCollection : Collection
 

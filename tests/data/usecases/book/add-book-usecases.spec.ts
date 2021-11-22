@@ -1,6 +1,6 @@
-import { AddBookUsecase } from '../../../src/data/usecases/book'
-import { CheckBookByTitleRepositorySpy, AddBookRepositorySpy } from '../mock'
-import { bookParams } from '../../presentation/mocks'
+import { AddBookUsecase } from '../../../../src/data/usecases/book'
+import { CheckBookByTitleRepositorySpy, AddBookRepositorySpy } from '../../mock'
+import { bookParams } from '../../../presentation/mocks'
 
 const makeSut = () => {
     const checkBookByTitleRepositorySpy = new CheckBookByTitleRepositorySpy()

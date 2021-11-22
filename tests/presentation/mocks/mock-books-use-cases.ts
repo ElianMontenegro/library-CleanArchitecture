@@ -1,4 +1,4 @@
-import { AddBook } from '../../../src/domain/usecases'
+import { AddBook } from '../../../src/domain/usecases/book'
 import { bookInputDTO } from '../../../src/domain/DTOs'
 
 export class AddBookSpy implements AddBook{

@@ -1,4 +1,4 @@
-import { AddBook } from "@/domain/usecases";
+import { AddBook } from "@/domain/usecases/book";
 import { AddBookRepository, CheckBookByTitleRepository } from "../../protocols/db";
 import { bookInputDTO } from '@/domain/DTOs'
 

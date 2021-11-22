@@ -1,4 +1,4 @@
-import { AddBook } from "@/domain/usecases"
+import { AddBook } from "@/domain/usecases/book"
 import { badRequest, noContent, serverError } from "../helpers"
 import { Controller, HttpResponse, Validation } from "../protocols"
 

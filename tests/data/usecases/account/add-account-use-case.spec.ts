@@ -1,7 +1,7 @@
-import { AddAccountUseCase } from "../../../src/data/usecases/account"
+import { AddAccountUseCase } from "../../../../src/data/usecases/account"
 import faker from "faker"
-import { CheckAccountByEmailRepositorySpy, AddAccountRepositorySpy } from "../mock/mock-db-account"
-import { HasherSpy } from "../mock/mock-criptography"
+import { CheckAccountByEmailRepositorySpy, AddAccountRepositorySpy } from "../../mock/mock-db-account"
+import { HasherSpy } from "../../mock/mock-criptography"
 
 const makeSut = () => {
     const userFake = {

@@ -1,4 +1,4 @@
-import { AddAccount, Authenticate } from "@/domain/usecases"
+import { AddAccount, Authenticate } from "@/domain/usecases/account"
 import { DataInUseError, InvalidParamError, UnauthorizedError } from "../errors"
 import { badRequest, forbidden, ok, serverError, Unauthorized } from "../helpers"
 import { Controller, HttpResponse, Validation } from "../protocols"
