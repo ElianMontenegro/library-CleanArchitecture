@@ -1,4 +1,5 @@
 import { BcrypterAdapter } from "../../../../src/infra/db/criptography"
+import bcrypt from 'bcrypt'
 
 jest.mock('bcrypt', () => ({
     async hash(): Promise<string> {
@@ -19,6 +20,13 @@ describe('bcrypterAdapter', () => {
             const sut = makeSut()
             const hash = await sut.hash('any_value')
             expect(hash).toBe('hash')
+        })
+
+        test('Should call hash with correct params', async () => {
+            const sut = makeSut()
+            const hashSpy = jest.spyOn(bcrypt, 'hash')
+            await sut.hash('any_value')
+            expect(hashSpy).toBeCalledWith('any_value', 10)
         })
     })  
 })
