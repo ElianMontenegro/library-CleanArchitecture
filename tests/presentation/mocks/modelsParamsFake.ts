@@ -34,3 +34,10 @@ export const AccountParams = () => (
         role : 'user'
     }
 )
+
+export const AutheticateParams = () => (
+    {
+        email : faker.internet.email(),
+        password : faker.datatype.uuid()
+    }
+)
