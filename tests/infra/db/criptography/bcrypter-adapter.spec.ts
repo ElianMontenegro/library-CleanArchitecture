@@ -43,5 +43,12 @@ describe('bcrypterAdapter', () => {
             const isValid = await sut.compare('any_plaintText', 'any_hashText')
             expect(isValid).toBe(true)
         })
+
+        test('Should call compare with correct params', async () => {
+            const sut = makeSut()
+            const hashSpy = jest.spyOn(bcrypt, 'compare')
+            await sut.compare('any_plaintText', 'any_hashText')
+            expect(hashSpy).toBeCalledWith('any_plaintText', 'any_hashText')
+        })
     })
 })
