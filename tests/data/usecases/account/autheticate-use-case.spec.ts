@@ -72,4 +72,13 @@ describe('Authenticate use case', () => {
         expect(jwtAdapterSpy.email).toBe(authenticationParams.email)
         expect(jwtAdapterSpy.id).toBe(loadAccountByEmailRepositorySpy.result.id)
     })
+
+    test('Should return null if jwtAdapterSpy return null', async () => {
+        const { sut, jwtAdapterSpy } = makeSut()
+        jwtAdapterSpy.AccessToken = null
+        jwtAdapterSpy.RefreshToken = null
+        const token = await sut.auth(AutheticateParams())
+        expect(token.accessToken).toBeNull()
+        expect(token.refreshToken).toBeNull()
+    })
 })

@@ -1,6 +1,8 @@
 import { Authenticate } from "@/domain/usecases/account";
 import { LoadAccountByEmailRepository  } from '@/data/protocols/db/account'
 import { AccessToken, HashCompare, RefreshToken } from '@/data/protocols/criptography'
+import { config as dotenv } from 'dotenv'
+dotenv()
 
 export class AuthenticateUseCase implements Authenticate{
     constructor(
@@ -24,3 +26,4 @@ export class AuthenticateUseCase implements Authenticate{
     }
 
 }
+
