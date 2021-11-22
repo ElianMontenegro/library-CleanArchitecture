@@ -43,4 +43,11 @@ describe('Authenticate use case', () => {
         const response = await sut.auth(AutheticateParams())
         expect(response).toBeNull()
     })
+
+    test('Should throw if hashCompareSpy throw', async () => {
+        const { sut, hashCompareSpy } = makeSut()
+        jest.spyOn(hashCompareSpy, 'compare').mockImplementationOnce(() => { throw Error() })
+        const promise = sut.auth(AutheticateParams())
+        await expect(promise).rejects.toThrow()
+    })
 })
