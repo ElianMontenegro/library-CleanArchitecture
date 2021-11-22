@@ -24,4 +24,11 @@ describe('Authenticate use case', () => {
         await sut.auth(autheticateParams)
         expect(loadAccountByEmailRepositorySpy.email).toBe(autheticateParams.email)
     })
+
+    test('Should throw if loadAccountByEmailRepositorySpy throw', async () => {
+        const { sut, loadAccountByEmailRepositorySpy } = makeSut()
+        jest.spyOn(loadAccountByEmailRepositorySpy, 'load').mockImplementationOnce(() => { throw Error() })
+        const promise = sut.auth(AutheticateParams())
+        await expect(promise).rejects.toThrow()
+    })
 })
