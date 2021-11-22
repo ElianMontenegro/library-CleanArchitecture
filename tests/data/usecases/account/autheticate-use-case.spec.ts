@@ -18,5 +18,10 @@ describe('Authenticate use case', () => {
         expect(response).toBe(null)
     })
 
-    
+    test('Should call loadAccountByEmailRepositorySpy with correct param', async () => {
+        const { sut, loadAccountByEmailRepositorySpy } = makeSut()
+        const autheticateParams = AutheticateParams()
+        await sut.auth(autheticateParams)
+        expect(loadAccountByEmailRepositorySpy.email).toBe(autheticateParams.email)
+    })
 })

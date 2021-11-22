@@ -1,5 +1,5 @@
 import { accountInputDTO } from "@/domain/DTOs";
-import { AddAccount, Authenticate, Autheticate } from "@/domain/usecases";
+import { AddAccount, Authenticate } from "@/domain/usecases/account";
 import faker from "faker";
 
 
@@ -14,12 +14,12 @@ export class AddAccountSpy implements AddAccount{
 }
 
 export class AuthenticateSpy implements Authenticate{
-    params : Autheticate.Params
+    params : Authenticate.Params
     result = {
         accessToken: faker.datatype.uuid(),
         refreshToken: faker.datatype.uuid()
     }
-    async auth(params: Autheticate.Params): Promise<Autheticate.Result>{
+    async auth(params: Authenticate.Params): Promise<Authenticate.Result>{
         this.params = params
         return this.result
     }
