@@ -2,6 +2,7 @@ import { AutheticateParams } from '../../../presentation/mocks'
 import { AuthenticateUseCase } from '../../../../src/data/usecases/account'
 import { LoadAccountByEmailRepositorySpy } from '../../mock/mock-db-account'
 import { HashCompareSpy, JwtAdapterSpy } from '../../mock/mock-criptography'
+import { verify } from 'jsonwebtoken'
 
 
 const makeSut = () => {
@@ -81,4 +82,12 @@ describe('Authenticate use case', () => {
         expect(token.accessToken).toBeNull()
         expect(token.refreshToken).toBeNull()
     })
+
+    test('Should throw error if jwtAdapterSpy accessToken throws error', async () => {
+        const { sut, jwtAdapterSpy } = makeSut()
+        jest.spyOn(jwtAdapterSpy, 'accessToken').mockImplementationOnce(() => { throw Error() })
+        const promise = sut.auth(AutheticateParams())
+        await expect(promise).rejects.toThrow()
+    })
+
 })
