@@ -95,5 +95,5 @@ describe('Authenticate use case', () => {
         jest.spyOn(jwtAdapterSpy, 'refreshToken').mockImplementationOnce(() => { throw Error() })
         const promise = sut.auth(AutheticateParams())
         await expect(promise).rejects.toThrow()
-      })
+    })
 })
