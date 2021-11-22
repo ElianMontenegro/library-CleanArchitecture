@@ -1,3 +1,4 @@
+import faker from "faker";
 import { 
     CheckAccountByEmailRepository, 
     AddAccountRepository,
@@ -24,7 +25,11 @@ export class AddAccountRepositorySpy implements AddAccountRepository{
 
 export class LoadAccountByEmailRepositorySpy implements LoadAccountByEmailRepository{
     email : string
-    result : LoadAccountByEmailRepository.Result
+    result = {
+        id: faker.datatype.uuid(),
+        username: faker.name.findName(),
+        password: faker.internet.password()
+    }
     async load(email: string): Promise<LoadAccountByEmailRepository.Result>{
         this.email = email
         return this.result
