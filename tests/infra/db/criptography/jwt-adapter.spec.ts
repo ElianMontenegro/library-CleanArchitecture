@@ -26,6 +26,14 @@ describe('JWTAdapter', () => {
         })
 
     })
+
+    describe('sign refresh token', () => {
+        test('Should return a refresh token if on sign success', () => {
+            const sut = makeSut()
+            const token = sut.sign({id : 'any_id', email : 'any_email', secret : 'any_secret', expiresIn : 'any_expiresIn'})
+            expect(token).toBe('token')
+        })
+    })
 })
 
 
