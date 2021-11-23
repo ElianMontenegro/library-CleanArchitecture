@@ -33,6 +33,13 @@ describe('JWTAdapter', () => {
             const token = sut.sign({id : 'any_id', email : 'any_email', secret : 'any_secret', expiresIn : 'any_expiresIn'})
             expect(token).toBe('token')
         })
+
+        test('Should call sign with correct params', () => {
+            const sut = makeSut()
+            const signSpy = jest.spyOn(jwt, 'sign')
+            sut.sign({id : 'any_id', email : 'any_email', secret : 'any_secret', expiresIn : 'any_expiresIn'})
+            expect(signSpy).toBeCalledWith({id : 'any_id', email : 'any_email'}, 'any_secret', 'any_expiresIn')
+        })
     })
 })
 
