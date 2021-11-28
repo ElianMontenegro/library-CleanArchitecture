@@ -1,8 +1,7 @@
 import { 
     Hasher, 
     HashCompare, 
-    AccessToken, 
-    RefreshToken 
+    JWTGenerator
 } from '../../../src/data/protocols/criptography'
 import faker from "faker"
 
@@ -27,19 +26,13 @@ export class HashCompareSpy implements HashCompare{
 }
 
 
-export class JwtAdapterSpy implements AccessToken, RefreshToken{
+export class JwtAdapterSpy implements JWTGenerator{
     id : string
     email : string
     AccessToken = faker.datatype.uuid()
     RefreshToken = faker.datatype.uuid()
-    async accessToken(id: string, secret: string, expiresIn: any):  Promise<string>{
+    sign(id: string, email?: string, secret?: string, expiresIn?: any): string{
         this.id = id
         return this.AccessToken
-    }
-
-    async refreshToken(id: string, email: string, secret: string, expiresIn: any):  Promise<string>{
-        this.id = id
-        this.email = email
-        return this.RefreshToken
     }
 }

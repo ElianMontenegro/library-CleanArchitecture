@@ -2,8 +2,6 @@ import { AutheticateParams } from '../../../presentation/mocks'
 import { AuthenticateUseCase } from '../../../../src/data/usecases/account'
 import { LoadAccountByEmailRepositorySpy } from '../../mock/mock-db-account'
 import { HashCompareSpy, JwtAdapterSpy } from '../../mock/mock-criptography'
-import { verify } from 'jsonwebtoken'
-
 
 const makeSut = () => {
     const jwtAdapterSpy = new JwtAdapterSpy()
@@ -12,7 +10,6 @@ const makeSut = () => {
     const sut = new AuthenticateUseCase(
         loadAccountByEmailRepositorySpy,
         hashCompareSpy,
-        jwtAdapterSpy,
         jwtAdapterSpy
     )
     return {
@@ -70,7 +67,6 @@ describe('Authenticate use case', () => {
         const { sut, jwtAdapterSpy, loadAccountByEmailRepositorySpy } = makeSut()
         const authenticationParams = AutheticateParams()
         await sut.auth(authenticationParams)
-        expect(jwtAdapterSpy.email).toBe(authenticationParams.email)
         expect(jwtAdapterSpy.id).toBe(loadAccountByEmailRepositorySpy.result.id)
     })
 
@@ -85,14 +81,14 @@ describe('Authenticate use case', () => {
 
     test('Should throw error if jwtAdapterSpy accessToken throws error', async () => {
         const { sut, jwtAdapterSpy } = makeSut()
-        jest.spyOn(jwtAdapterSpy, 'accessToken').mockImplementationOnce(() => { throw Error() })
+        jest.spyOn(jwtAdapterSpy, 'sign').mockImplementationOnce(() => { throw Error() })
         const promise = sut.auth(AutheticateParams())
         await expect(promise).rejects.toThrow()
     })
 
     test('Should throw error if jwtAdapterSpy refreshToken throws error', async () => {
         const { sut, jwtAdapterSpy } = makeSut()
-        jest.spyOn(jwtAdapterSpy, 'refreshToken').mockImplementationOnce(() => { throw Error() })
+        jest.spyOn(jwtAdapterSpy, 'sign').mockImplementationOnce(() => { throw Error() })
         const promise = sut.auth(AutheticateParams())
         await expect(promise).rejects.toThrow()
     })

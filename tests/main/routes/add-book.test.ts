@@ -6,7 +6,7 @@ import { bookParams } from '../../presentation/mocks'
 
 let bookCollection : Collection
 
-describe('Book Route', () => {
+describe.skip('Book Route', () => {
     beforeAll(async () => {
         await mongoHelper.connect(process.env.MONGO_URL)
     })

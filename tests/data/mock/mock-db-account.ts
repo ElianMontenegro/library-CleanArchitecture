@@ -8,7 +8,7 @@ import {
 
 export class CheckAccountByEmailRepositorySpy implements CheckAccountByEmailRepository {
     email : string
-    result = true
+    result = false
     async checkAccountByEmail(email: string): Promise<Boolean>{
         this.email = email
         return this.result

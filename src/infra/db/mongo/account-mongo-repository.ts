@@ -1,5 +1,5 @@
 import { CheckAccountByEmailRepository, AddAccountRepository, LoadAccountByEmailRepository } from '@/data/protocols/db/account'
-import { mongoHelper } from '@/infra/db/mongo'
+import { mongoHelper } from '../../../infra/db/mongo'
 import { Collection } from 'mongodb'
 
 export class AccountMongoRepository implements 

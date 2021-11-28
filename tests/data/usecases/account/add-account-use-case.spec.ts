@@ -29,15 +29,16 @@ const makeSut = () => {
 describe('AddAccount usecases', () => {
     test('Should return false if user is not found', async () => {
         const { sut, userFake, checkAccountByEmailRepositorySpy } = makeSut()
-        checkAccountByEmailRepositorySpy.result = false
+        checkAccountByEmailRepositorySpy.result = true
         const response = await sut.add(userFake)
         expect(response).toEqual(false)
     })
 
     test('Should call hasherSpy with correct plaintext', async () => {
         const { sut, userFake, hasherSpy } = makeSut()
-        await sut.add(userFake)
-        expect(hasherSpy.plaintext).toEqual(userFake.password)
+        const fake = userFake
+        await sut.add(fake)
+        expect(hasherSpy.plaintext).toEqual(fake.password)
     })
 
     test('Should throw error if hasherSpy throw error', async () => {
