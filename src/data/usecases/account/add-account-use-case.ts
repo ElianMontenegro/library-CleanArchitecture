@@ -12,7 +12,7 @@ export class AddAccountUseCase implements AddAccount{
     async add(user: accountInputDTO): Promise<Boolean>{
         const account = await this.checkAccountByEmailRepository.checkAccountByEmail(user.email)
         let isSaved : Boolean = false
-        if(account){
+        if(!account){
             const passwordHash = await this.hasher.hash(user.password);
             isSaved = await this.addAccountRepository.add({... user, password :  passwordHash})
             return isSaved
